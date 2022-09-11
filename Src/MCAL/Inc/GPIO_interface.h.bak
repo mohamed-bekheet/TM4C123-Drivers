@@ -78,6 +78,7 @@ typedef struct{
 	GPOIO_PIN_OUTCURRENT_e pinCurr;
 }GPIO_PIN_CONFIG_t;
 
+//hi
 
 // Public functions
 void GPIO_InitPort(const GPIO_PIN_CONFIG_t *GPIO_PIN_CONFIG_ptr);

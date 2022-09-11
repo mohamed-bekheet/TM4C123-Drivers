@@ -86,7 +86,7 @@ typedef struct
 #define GPIO_REG_PORTE_AHB ((volatile GPIO_Port_t *)0x4005C000)
 #define GPIO_REG_PORTF_AHB ((volatile GPIO_Port_t *)0x4005D000)
 //0b00000000000000000000001111111100
-#define GPIO_REG_PORTA_DATA (*(volatile u32 *)(0x40004000+0X3FC))
-//#define GPIO_REG_PORTA_DATA (*(volatile u32 *)(0x40004000+255))
+//#define GPIO_REG_PORTA_DATA (*(volatile u32 *)(0x40004000+0X3FC))
+#define GPIO_REG_PORTA_DATA (*(volatile u32 *)(0x40004000+255))
 
 #endif /* GPIO_PRIVATE_H_ */

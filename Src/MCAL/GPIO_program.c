@@ -13,98 +13,94 @@
 #include "GPIO_private.h"
 
 
+//   GPIO_REG_PORTA_APB
+// Public functions
+void GPIO_InitPort(const GPIO_PIN_CONFIG_t *GPIO_PIN_CONFIG_ptr)
+{
+	if (GPIO_PIN_CONFIG_ptr->portBus == BUS_APB)
+	{
+		switch (GPIO_PIN_CONFIG_ptr->pinPort)
+		{
+		case GPIO_PORTA:
+			/* code */
+			//MODE
+			if (GPIO_PIN_CONFIG_ptr->pinMode == MODE_DIO)
+			{
+				CLR_BIT(GPIO_REG_PORTA_P1_APB->GPIOAFSEL, GPIO_PIN_CONFIG_ptr->pin);
+				SET_BIT(GPIO_REG_PORTA_P2_APB->GPIODEN, GPIO_PIN_CONFIG_ptr->pin);
+			}
+			if (GPIO_PIN_CONFIG_ptr->pinMode == MODE_ALTER)
+			{
+				SET_BIT(GPIO_REG_PORTA_P1_APB->GPIOAFSEL, GPIO_PIN_CONFIG_ptr->pin);
+				CLR_BIT(GPIO_REG_PORTA_P2_APB->GPIODEN, GPIO_PIN_CONFIG_ptr->pin);
+			}
+			//DIR
+			if (GPIO_PIN_CONFIG_ptr->pinDir == DIR_INPUT)
+			{
+				CLR_BIT(GPIO_REG_PORTA_P1_APB->GPIODIR, GPIO_PIN_CONFIG_ptr->pin);
+			}
+			if (GPIO_PIN_CONFIG_ptr->pinDir == DIR_OUTPUT)
+			{
+				SET_BIT(GPIO_REG_PORTA_P1_APB->GPIODIR, GPIO_PIN_CONFIG_ptr->pin);
+			}
+			//INTERNAL ATTACH
+			if (GPIO_PIN_CONFIG_ptr->pinAttach == GPIO_OPENDRAIN)
+			{
+				SET_BIT( GPIO_REG_PORTA_P2_APB->GPIOODR , GPIO_PIN_CONFIG_ptr->pin);
+			}
+			if (GPIO_PIN_CONFIG_ptr->pinAttach == GPIO_PULLUP)
+			{
+				SET_BIT(GPIO_REG_PORTA_P2_APB->GPIOPUR, GPIO_PIN_CONFIG_ptr->pin);
+			}
+			if (GPIO_PIN_CONFIG_ptr->pinAttach == GPIO_PULLDOWN)
+			{
+				SET_BIT(GPIO_REG_PORTA_P2_APB->GPIOPDR, GPIO_PIN_CONFIG_ptr->pin);
+			}
+			//PIN CURRENT
+			if (GPIO_PIN_CONFIG_ptr->pinCurr == GPIO_2mA)
+			{
+				SET_BIT(GPIO_REG_PORTA_P2_APB->GPIODR2R, GPIO_PIN_CONFIG_ptr->pin);
+			}
+			if (GPIO_PIN_CONFIG_ptr->pinCurr == GPIO_4mA)
+			{
+				SET_BIT(GPIO_REG_PORTA_P2_APB->GPIODR4R, GPIO_PIN_CONFIG_ptr->pin);
+			}
+			if (GPIO_PIN_CONFIG_ptr->pinCurr == GPIO_8mA)
+			{
+				SET_BIT(GPIO_REG_PORTA_P2_APB->GPIODR8R, GPIO_PIN_CONFIG_ptr->pin);
+			}
+			//PIN VALUE USE DATA REGISTER (LIKE ATOMIC ACCESS)
+			GPIO_REG_PORTA_DATA	= (GPIO_PIN_CONFIG_ptr->pinLevel<<(GPIO_PIN_CONFIG_ptr->pin));
 
-/*
- * function to set mode of a certain pin
- */
-void GPIO_voidSetPinMode(u8 Copy_u8Port, u8 Copy_u8Pin, u8 Copy_u8PinMode){
-	switch(Copy_u8Port){
-	case GPIO_PORTA:
-		if(Copy_u8Pin <= 7){
-			REG_GPIO_PORTA->CRL &= (~(0b1111<<(4*Copy_u8Pin)));
-			REG_GPIO_PORTA->CRL |= (Copy_u8PinMode << (4*Copy_u8Pin));
-		}else if(Copy_u8Pin <= 16){
-			REG_GPIO_PORTA->CRH &= (~(0b1111<<(4*(Copy_u8Pin-8))));
-			REG_GPIO_PORTA->CRH |= (Copy_u8PinMode << (4*(Copy_u8Pin-8)));
-		}
-		break;
-	case GPIO_PORTB:
-		if(Copy_u8Pin <= 7){
-			REG_GPIO_PORTB->CRL &= (~(0b1111<<(4*Copy_u8Pin)));
-			REG_GPIO_PORTB->CRL |= (Copy_u8PinMode << (4*Copy_u8Pin));
-		}else if(Copy_u8Pin <= 16){
-			REG_GPIO_PORTB->CRH &= (~(0b1111<<(4*(Copy_u8Pin-8))));
-			REG_GPIO_PORTB->CRH |= (Copy_u8PinMode << (4*(Copy_u8Pin-8)));
-		}
-		break;
-	case GPIO_PORTC:
-		if(Copy_u8Pin <= 7){
-			REG_GPIO_PORTC->CRL &= (~(0b1111<<(4*Copy_u8Pin)));
-			REG_GPIO_PORTC->CRL |= (Copy_u8PinMode << (4*Copy_u8Pin));
-		}else if(Copy_u8Pin <= 16){
-			REG_GPIO_PORTC->CRH &= (~(0b1111<<(4*(Copy_u8Pin-8))));
-			REG_GPIO_PORTC->CRH |= (Copy_u8PinMode << (4*(Copy_u8Pin-8)));
-		}
-		break;
-	}
-}
-
-
-/*
- * function to get input value of a certain pin
- */
-u8 GPIO_u8GetPinValue(u8 Copy_u8Port, u8 Copy_u8Pin){
-	u8 temp_u8ReturnVal = 0 ;
-	switch(Copy_u8Port){
-	case GPIO_PORTA:
-		temp_u8ReturnVal = GET_BIT(REG_GPIO_PORTA->IDR,Copy_u8Pin);
-		break;
-	case GPIO_PORTB:
-		temp_u8ReturnVal = GET_BIT(REG_GPIO_PORTB->IDR,Copy_u8Pin);
-		break;
-	case GPIO_PORTC:
-		return GET_BIT(REG_GPIO_PORTC->IDR,Copy_u8Pin);
-		break;
-	}
-	return temp_u8ReturnVal;
-}
-
-
-/*
- * function to set output value of a certain pin
- */
-void GPIO_voidSetPinValue(u8 Copy_u8Port, u8 Copy_u8Pin, bool Copy_u8PinValue){
-
-	switch(Copy_u8Port){
-	case GPIO_PORTA:
-		if(Copy_u8PinValue){
-			SET_BIT(REG_GPIO_PORTA->ODR,Copy_u8Pin);	// non-atomic access
-			//REG_GPIO_PORTA->BSRR = 1<<Copy_u8PinValue;//0x00010001;		// atomic access
-		}else{
-			CLR_BIT(REG_GPIO_PORTA->ODR,Copy_u8Pin);
-		}
-		break;
-	case GPIO_PORTB:
-		if(Copy_u8PinValue){
-			SET_BIT(REG_GPIO_PORTB->ODR,Copy_u8Pin);
-		}else{
-			CLR_BIT(REG_GPIO_PORTB->ODR,Copy_u8Pin);
-		}
 			break;
-	case GPIO_PORTC:
-		if(Copy_u8PinValue){
-			SET_BIT(REG_GPIO_PORTC->ODR,Copy_u8Pin);
-		}else{
-			CLR_BIT(REG_GPIO_PORTC->ODR,Copy_u8Pin);
-		}
+		case GPIO_PORTB:
+			/* code */
 			break;
+		case GPIO_PORTC:
+			/* code */
+			break;
+		case GPIO_PORTD:
+			/* code */
+			break;
+		case GPIO_PORTE:
+			/* code */
+			break;
+		case GPIO_PORTF:
+			/* code */
+			break;
+		}
 	}
-
+	else
+		; // for AHB bus
 }
 
-void GPIO_SetPinArrayValue(GPIO_PinConfig_t *pinArray, u8 arraylenght,u32 value){
-	while(arraylenght--){
-		GPIO_voidSetPinValue(pinArray[arraylenght].port, pinArray[arraylenght].pin_number, GET_BIT(value,arraylenght));
-	}
-}
+void GPIO_SetPinMode(GPOIO_PORT_e port, GPOIO_PIN_e pin, GPOIO_PIN_MODE_e PinMod);
+void GPIO_SetPinDir(GPOIO_PORT_e port, GPOIO_PIN_e pin, GPOIO_PIN_DIRECTION_e pinDir);
+void GPIO_SetPinInternalAttach(GPOIO_PORT_e port, GPOIO_PIN_e pin, GPOIO_PIN_INTERNAL_ATTACH_e pinAttach);
 
+// DIO control functions
+void GPIO_SetPinLevel(GPOIO_PORT_e port, GPOIO_PIN_e pin, GPOIO_PIN_LEVEL_e pinLevel){
+//USE DATA REGISTER
+	GPIO_REG_PORTA_DATA	= (pinLevel<<(pin));
+
+}

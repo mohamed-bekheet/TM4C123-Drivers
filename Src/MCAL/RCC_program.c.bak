@@ -32,4 +32,4 @@ void SC_Init(void){
 void SC_EnableGPIOPort(u8 ScGpioPort){
 		WRITE_BITS(SC_RCGC2 ,1 ,ScGpioPort);
 		WRITE_BITS(SC_RCGCGPIO ,1 ,ScGpioPort);
-  }
+}

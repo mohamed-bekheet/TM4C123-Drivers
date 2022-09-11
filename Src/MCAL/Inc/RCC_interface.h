@@ -8,212 +8,61 @@
 #ifndef RCC_INTERFACE_H_
 #define RCC_INTERFACE_H_ /// same exact name
 
+#include "STD_TYPES.h"
 
 /*
- * This driver responsible for Clocks for peripherals and reset system
+* 	System Control :
+ *	System control configures the overall operation of the device and provides information about the
+ *  device. Configurable features include reset control, NMI operation, power control, clock control, and
+ *  low-power modes
  *
  * */
-//for MCO
-#define RCC_NOCLK_MCO 0b010
-#define RCC_SYSCLK_MCO 0b100
-#define RCC_HSI_MCO 0b101
-#define RCC_HSE_MCO 0b110
-#define RCC_PLL_MCO 0b111
+//*****************************RESET CONTROL******************
+
+void SC_SWSysReset(void);
+
+void SC_SWCoreReset(void);
+
+void SC_SWPeripheralReset(void);
+
+
+//********************ClOCK CONTROL*****************
+
+//********SC_CLKSRC***CLOCK SOURCES page 220 in datasheet
+#define		MAINOSC		0X0	//Main oscillator
+#define	  PIOSC			0X1	//Precision internal oscillator
+#define		PIOSC_4		0X2	//divided by 4
+#define	  LFIOSC		0X3	//Low-frequency internal oscillator
+#define		HOSC			//FROM RCC2
 
 /*
-typedef enum{
-	HSI,
-	HSE,
-	PLL,
-	LSI,//40khz
-	LSE,//32.768khz
-}RCC_ClockSources;
+Init Clock source configurations
 */
-
-/*
-typedef struct{
-	vu32 HSION:1;//>
-	vu32 HSIRDY:1;
-	vu32 :1;
-	vu32 HSITRIM:4;
-	vu32 HSICAL:7;
-	vu32 HSEON:1;//>
-	vu32 HSERDY:1;
-	vu32 HSEBYP:1;//>
-	vu32 CSSON:1;//>
-	vu32 :4;
-	vu32 PLLON:1;//>
-	vu32 PLLRDY:1;
-}RCC_CR_t;//clock control register
-*/
-
-//volatile RCC_CR_t* RCC_CR_ptr;
-
-//RCC_CR_ptr = ((volatile RCC_CR_t*)(0x40021000+0x00));
+void SC_Init(void);
 
 
-void RCC_voidClockSecuritySys(bool enable);
-
-typedef enum{
-	RCC_AHB,
-	RCC_APB1,
-	RCC_APB2,
-}RCC_bus_e;
-
-//Do not change any thing from here
-//peripheral
-#define RCC_AHB			0
-#define RCC_APB1		1
-#define RCC_APB2		2
-
-#define RCC_MCO_NO		(-2)
-#define RCC_SYS_CLK		(-1)
-
-#define RCC_HSI			0b00
-#define RCC_HSE			0b01 //8MHZ crystal
-#define RCC_PLL			0b10
 
 
-#define RCC_AHB_PRE_NO	0
-#define RCC_AHB_PRE_2	8
-#define RCC_AHB_PRE_4	9
-#define RCC_AHB_PRE_8	10
-#define RCC_AHB_PRE_16	11
+//****************PEROPHERAL ENABLE******************
+
+//GPIO
+#define SC_GPIO_PORTA 0
+#define SC_GPIO_PORTB 1
+#define SC_GPIO_PORTC 2
+#define SC_GPIO_PORTD 3
+#define SC_GPIO_PORTE 4
+#define SC_GPIO_PORTF 5
+
+void SC_EnableGPIOPort(u8 ScGpioPort);
 
 
-//for MCO
-#define RCC_NOCLK_MCO 0b010
-#define RCC_SYSCLK_MCO 0b100
-#define RCC_HSI_MCO 0b101
-#define RCC_HSE_MCO 0b110
-#define RCC_PLL_MCO 0b111
+//GPIO BUS
+#define SC_GPIO_APB	0
+#define SC_GPIO_AHB	1		//Advanced High-Performance Bus
 
-/*
-typedef enum{
-	NO,
-	PRE2 = 8,
-	PRE4,
-	PRE8,
-	PRE16,
-}RCC_AHB_PRE;
-*/
-// we can't use enum in macros because it needs compiling and macros are preprocessor
-
-typedef enum{  //new data type label int "peripheral name"
-	    DMA1,
-	    DMA2,
-	    SRAM,
-	    RES1,
-	    FLITF,
-	    RES2,
-	    CRCE,
-	    RES3,
-	    FSMC,
-	    RES4,
-	    SDIO,
-	    RES5,
-	    RES6,
-	    RES7,
-	    RES8,
-	    RES9,
-	    RES10,
-	    RES11,
-	    RES12,
-	    RES13,
-	    RES14,
-	    RES15,
-	    RES16,
-	    RES17,
-	    RES18,
-	    RES19,
-	    RES20,
-	    RES21,
-	    RES22,
-	    RES23,
-	    RES24,
-	    RES25,
-	    TIM2,
-	    TIM3,
-	    TIM4,
-	    TIM5,
-	    TIM6,
-	    TIM7,
-	    TIM12,
-	    TIM13,
-	    TIM14,
-	    RES26,
-	    RES27,
-	    WWDG,
-	    RES28,
-	    RES29,
-	    SPI2,
-	    SPI3,
-	    RES30,
-	    USART2,
-	    USART3,
-	    UART4,
-	    UART5,
-	    I2C1,
-	    I2C2,
-	    USB,
-	    CAN,
-	    BKP,
-	    PWR,
-	    DAC,
-	    RES46,
-	    RES31,
-	    AFIO,
-	    RES32,
-	    GPIOA,
-	    GPIOB,
-	    GPIOC,
-	    GPIOD,
-	    GPIOE,
-	    GPIOF,
-	    GPIOG,
-	    ADC1,
-	    ADC2,
-	    TIM1,
-	    SPI1,
-	    TIM8,
-	    USART1,
-	    ADC3,
-	    RES33,
-	    RES34,
-	    RES35,
-	    TIM9,
-	    TIM10,
-	    TIM11,
-	    RES36,
-	    RES37,
-	    RES38,
-	    RES39,
-	    RES40,
-	    RES41,
-	    RES42,
-	    RES43,
-	    RES44,
-	    RES45
-}Peripherals_e;
+void SC_SelectGPIOBus(u8 ScGpioPort, u8 ScGpioBus);
 
 
-// PUPLIVC FUNCTION DECLARATION
 
-//write it based on RCC configuration file
-void RCC_voidInit (void);
-
-/*
- * NAME:RCC_voidPeripheralClockEnable
- * RETURN TYPE: VOID
- * ARGUMENTS: Copy_u8BusName:U8 , (AHB,APB1,ABP2)
- * 			  Copy_u8PerphiralName : Peripherals_t , (ENUM VALUES)
- * DESCRIPTION: ENABLES PREPHIRAL CLK FOR CERTAIN PREPHIRAL
- */
-void RCC_voidPeripheralClockEnable(u8 Copy_u8BusName, Peripherals_e Copy_u8PerphiralName);
-
-void RCC_voidPeripheralClockDisable(u8 Copy_u8BusName, Peripherals_e Copy_u8PerphiralName);
-
-
-u32 RCC_u32GetSYSCLK(void);
 
 #endif /* RCC_INTERFACE_H_ */

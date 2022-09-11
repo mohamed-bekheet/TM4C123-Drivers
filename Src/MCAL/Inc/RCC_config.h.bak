@@ -24,7 +24,7 @@
 //2-Oscillator Source
 #define SC_OSCSRC 	  PIOSC      // PIOSC //CHOOSE FRON CLOCK SOURCES IN INTERFACE FILE 
 //2-USB AND PLL CONFIGURATION
-#define SC_XTAL				0x0E			//(0x06~0x08)only for not using PLL,(0X09~0X1A) REPRESENTS CRYSTAL VALUES OF MAIN OSCILLATOR IN PAGE 256
+#define SC_XTAL				0x14			//(0x06~0x08)only for not using PLL,(0X09~0X1A) REPRESENTS CRYSTAL VALUES OF MAIN OSCILLATOR IN PAGE 256
 //4-PLL SOURCE BYPASS (USE PLL OR NOT)
 #define SC_PLL_BYBASS 	0				//(0~1) =1>The system clock is derived from the OSC source and divided by the divisor specified by SYSDIV.
 

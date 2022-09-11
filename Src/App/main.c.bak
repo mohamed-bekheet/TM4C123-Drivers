@@ -20,7 +20,7 @@
 #include "SYSTICK_interface.h"
 
 u32 SYSFREQ ;//from rcc
-u32 STK_FREQ = 0;//from systick handler
+u32 STK_FREQ=0;//from systick handler
 unsigned long long STK_COUNTS=0;//from systick handler
 
 
@@ -33,7 +33,7 @@ unsigned long long STK_COUNTS=0;//from systick handler
 
 void LED_PWM_RUN(void){
 	
-	u32 currT_ms = STK_COUNTS;//*1000/SYSFREQ;
+	u32 currT_ms=STK_COUNTS;//*1000/SYSFREQ;
  	if(currT_ms <= OnTime)GPIO_SetPinLevel(LED_PORT, LED_PIN, OUTPUT_HIGH);
  	else if (currT_ms < OnTime+OffTime)GPIO_SetPinLevel(LED_PORT, LED_PIN, OUTPUT_LOW);
  	else if (currT_ms >= OnTime+OffTime) STK_COUNTS = 0;

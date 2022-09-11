@@ -8,6 +8,8 @@
 #ifndef SYSTICK_INTERFACE_H_
 #define SYSTICK_INTERFACE_H_
 
+#include "STD_TYPES.h"
+
 //Macros
 //AHB has main system clock
 #define SYSTICK_AHB_8 		0

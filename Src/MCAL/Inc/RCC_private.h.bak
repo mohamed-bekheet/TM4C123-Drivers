@@ -14,8 +14,7 @@
 #define SC_RCC1				*((volatile u32*) (SC_BASE_ADDRESS+0x060))  // This register configure the system clock and oscillators
 #define SC_GPIOHBCT		*((volatile u32*) (SC_BASE_ADDRESS+0x06C))  // GPIO High-Performance Bus Control (GPIOHBCTL), This register controls which internal bus is used to access each GPIO port 
 #define SC_RCC2			  *((volatile u32*) (SC_BASE_ADDRESS+0x070))
-
-
+	
 #define SC_SCGCGPIO  *((volatile u32*) (SC_BASE_ADDRESS+0x708))  //General-Purpose Input/Output Sleep Mode Clock Gating Control
 #define SC_RCGCGPIO	 *((volatile u32*) (SC_BASE_ADDRESS+0x608))	 //General-Purpose Input/Output Run Mode Clock Gating Control
 #define SC_RCGC2	   *((volatile u32*) (SC_BASE_ADDRESS+0x108))	 //This register controls the clock gating logic in normal Run mode
