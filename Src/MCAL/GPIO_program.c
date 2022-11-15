@@ -87,6 +87,54 @@ void GPIO_InitPort(const GPIO_PIN_CONFIG_t *GPIO_PIN_CONFIG_ptr)
 			break;
 		case GPIO_PORTF:
 			/* code */
+			//MODE
+			if (GPIO_PIN_CONFIG_ptr->pinMode == MODE_DIO)
+			{
+				CLR_BIT(GPIO_REG_PORTF_P1_APB->GPIOAFSEL, GPIO_PIN_CONFIG_ptr->pin);
+				SET_BIT(GPIO_REG_PORTF_P2_APB->GPIODEN, GPIO_PIN_CONFIG_ptr->pin);
+			}
+			if (GPIO_PIN_CONFIG_ptr->pinMode == MODE_ALTER)
+			{
+				SET_BIT(GPIO_REG_PORTF_P1_APB->GPIOAFSEL, GPIO_PIN_CONFIG_ptr->pin);
+				CLR_BIT(GPIO_REG_PORTF_P2_APB->GPIODEN, GPIO_PIN_CONFIG_ptr->pin);
+			}
+			//DIR
+			if (GPIO_PIN_CONFIG_ptr->pinDir == DIR_INPUT)
+			{
+				CLR_BIT(GPIO_REG_PORTF_P1_APB->GPIODIR, GPIO_PIN_CONFIG_ptr->pin);
+			}
+			if (GPIO_PIN_CONFIG_ptr->pinDir == DIR_OUTPUT)
+			{
+				SET_BIT(GPIO_REG_PORTF_P1_APB->GPIODIR, GPIO_PIN_CONFIG_ptr->pin);
+			}
+			//INTERNAL ATTACH
+			if (GPIO_PIN_CONFIG_ptr->pinAttach == GPIO_OPENDRAIN)
+			{
+				SET_BIT( GPIO_REG_PORTF_P2_APB->GPIOODR , GPIO_PIN_CONFIG_ptr->pin);
+			}
+			if (GPIO_PIN_CONFIG_ptr->pinAttach == GPIO_PULLUP)
+			{
+				SET_BIT(GPIO_REG_PORTF_P2_APB->GPIOPUR, GPIO_PIN_CONFIG_ptr->pin);
+			}
+			if (GPIO_PIN_CONFIG_ptr->pinAttach == GPIO_PULLDOWN)
+			{
+				SET_BIT(GPIO_REG_PORTF_P2_APB->GPIOPDR, GPIO_PIN_CONFIG_ptr->pin);
+			}
+			//PIN CURRENT
+			if (GPIO_PIN_CONFIG_ptr->pinCurr == GPIO_2mA)
+			{
+				SET_BIT(GPIO_REG_PORTF_P2_APB->GPIODR2R, GPIO_PIN_CONFIG_ptr->pin);
+			}
+			if (GPIO_PIN_CONFIG_ptr->pinCurr == GPIO_4mA)
+			{
+				SET_BIT(GPIO_REG_PORTF_P2_APB->GPIODR4R, GPIO_PIN_CONFIG_ptr->pin);
+			}
+			if (GPIO_PIN_CONFIG_ptr->pinCurr == GPIO_8mA)
+			{
+				SET_BIT(GPIO_REG_PORTF_P2_APB->GPIODR8R, GPIO_PIN_CONFIG_ptr->pin);
+			}
+			//PIN VALUE USE DATA REGISTER (LIKE ATOMIC ACCESS)
+			//GPIO_REG_PORTF_DATA	= (GPIO_PIN_CONFIG_ptr->pinLevel<<(GPIO_PIN_CONFIG_ptr->pin));
 			break;
 		}
 	}
@@ -101,6 +149,6 @@ void GPIO_SetPinInternalAttach(GPOIO_PORT_e port, GPOIO_PIN_e pin, GPOIO_PIN_INT
 // DIO control functions
 void GPIO_SetPinLevel(GPOIO_PORT_e port, GPOIO_PIN_e pin, GPOIO_PIN_LEVEL_e pinLevel){
 //USE DATA REGISTER
-	GPIO_REG_PORTA_DATA	= (pinLevel<<(pin));
+	GPIO_REG_PORTF_DATA	= (pinLevel<<(pin));
 
 }

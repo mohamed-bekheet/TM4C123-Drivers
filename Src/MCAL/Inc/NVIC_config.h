@@ -32,4 +32,5 @@ extern const NVIC_Cfg NVIC_PCfg[NVIC_NUM_OF_ENABLED_INTERRUPT];
 
 extern const u8 NVIC_SUB_GP_Cfg;
  
-#endif 
+#endif
+

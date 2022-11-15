@@ -28,7 +28,7 @@ unsigned long long STK_COUNTS=0;//from systick handler
 
 /////////////////////////// - PWM APPLICATION - //////////////////////////
 #define LED_PORT GPIO_PORTA
-#define LED_PIN 4
+#define LED_PIN 2
 
  u32 OnTime = 100;//in ms
  u32 OffTime = 100;//in ms
@@ -36,8 +36,8 @@ unsigned long long STK_COUNTS=0;//from systick handler
 void LED_PWM_RUN(void){
 	
 	u32 currT_ms = STK_COUNTS;//*1000/SYSFREQ;
- 	if(currT_ms <= OnTime)GPIO_SetPinLevel(LED_PORT, LED_PIN, OUTPUT_HIGH);
- 	else if (currT_ms < OnTime+OffTime)GPIO_SetPinLevel(LED_PORT, LED_PIN, OUTPUT_LOW);
+ 	if(currT_ms <= OnTime) GPIO_SetPinLevel(LED_PORT, LED_PIN, OUTPUT_HIGH);
+ 	else if (currT_ms < OnTime+OffTime) GPIO_SetPinLevel(LED_PORT, LED_PIN, OUTPUT_LOW);
  	else if (currT_ms >= OnTime+OffTime) STK_COUNTS = 0;
 
  }
@@ -52,10 +52,10 @@ void LED_PWM_INIT(u32 OnTime_ms, u32 OffTime_ms){
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-GPIO_PIN_CONFIG_t PINA0 = {
+GPIO_PIN_CONFIG_t PINF0 = {
 	.portBus = BUS_APB,
-	.pinPort = GPIO_PORTA,
-	.pin = PORT_PIN0,
+	.pinPort = GPIO_PORTF,
+	.pin = PORT_PIN2,
 	.pinMode = MODE_DIO,
 	.pinDir = DIR_OUTPUT,
 	.pinAttach = GPIO_PULLUP,
@@ -63,30 +63,29 @@ GPIO_PIN_CONFIG_t PINA0 = {
 	.pinCurr = GPIO_4mA,
 };
 
-
+#define Enable_Exceptions()    __asm("CPSIE I")
 
 int main(void) {
 	
 	
 //////////////////////////////////////////INITIALIZATION/////////////////////////////////////
 	SC_Init();
-	SC_EnableGPIOPort(SC_GPIO_PORTA);
+	SC_EnableGPIOPort(SC_GPIO_PORTF);
 
+	Enable_Exceptions();
 	NVIC_Init();
+	
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	GPIO_InitPort(&PINA0);
-	GPIO_SetPinLevel(LED_PORT, LED_PIN, OUTPUT_HIGH);
-	GPIO_SetPinLevel(LED_PORT, LED_PIN, OUTPUT_LOW);
-	GPIO_SetPinLevel(LED_PORT, LED_PIN, OUTPUT_HIGH);
+	GPIO_InitPort(&PINF0);
+
+	STK_voidInit(STK_FREQ,SYSTICK_AHB_8);
 	
-	STK_voidInit(STK_FREQ,SYSTICK_AHB_8);	
-	GPIO_REG_PORTA_DATA	= (1<<(1));
-	
+
 ////////////////////////////////////APPLICATION//////////////////////////////////////////////
-	LED_PWM_INIT(1000,1000);
+	LED_PWM_INIT(100,100);
   
 	while (1) {
-		LED_PWM_RUN();
+	
 	}
 	return 0;
 }

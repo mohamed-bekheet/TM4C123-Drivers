@@ -81,8 +81,6 @@ typedef struct{
 
 // Public functions
 void GPIO_InitPort(const GPIO_PIN_CONFIG_t *GPIO_PIN_CONFIG_ptr);
-
-
 void GPIO_SetPinMode( GPOIO_PORT_e port, GPOIO_PIN_e pin, GPOIO_PIN_MODE_e PinMod);
 void GPIO_SetPinDir(GPOIO_PORT_e port, GPOIO_PIN_e pin,GPOIO_PIN_DIRECTION_e pinDir);
 void GPIO_SetPinInternalAttach(GPOIO_PORT_e port, GPOIO_PIN_e pin,GPOIO_PIN_INTERNAL_ATTACH_e pinAttach);

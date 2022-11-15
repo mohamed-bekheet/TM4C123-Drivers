@@ -1,0 +1,23 @@
+/**
+ * @file NVIC_interface.h
+ * @author mohamed moustafa (mohamed.bekheet2023@gmail.com)
+ * @brief 
+ * @version 0.1
+ * @date 2022-11-15
+ * 
+ * @copyright Copyright (c) 2022
+ * 
+ */
+
+#ifndef NVIC_interface_H
+#define NVIC_interface_H
+
+#include "NVIC_config.h"
+
+
+
+
+
+void NVIC_Init(void);
+
+#endif
