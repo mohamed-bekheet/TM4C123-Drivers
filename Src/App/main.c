@@ -62,6 +62,7 @@ GPIO_PIN_CONFIG_t PINA0 = {
 };
 
 
+
 int main(void) {
 	
 	
@@ -81,7 +82,7 @@ int main(void) {
 	LED_PWM_INIT(1000,1000);
   
 	while (1) {
-
+		LED_PWM_RUN();
 	}
 	return 0;
 }
