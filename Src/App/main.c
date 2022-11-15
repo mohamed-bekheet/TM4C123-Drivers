@@ -19,6 +19,8 @@
 
 #include "SYSTICK_interface.h"
 
+#include "NVIC_interface.h"
+
 u32 SYSFREQ ;//from rcc
 u32 STK_FREQ = 0;//from systick handler
 unsigned long long STK_COUNTS=0;//from systick handler
@@ -69,6 +71,8 @@ int main(void) {
 //////////////////////////////////////////INITIALIZATION/////////////////////////////////////
 	SC_Init();
 	SC_EnableGPIOPort(SC_GPIO_PORTA);
+
+	NVIC_Init();
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	GPIO_InitPort(&PINA0);
 	GPIO_SetPinLevel(LED_PORT, LED_PIN, OUTPUT_HIGH);
